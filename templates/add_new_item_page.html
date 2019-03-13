@@ -1,0 +1,19 @@
+{% include "./extended/header.html" %}
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <form action="" method="POST">
+        <h4>Fill the fields to create new item:</h4>
+        <label for="">Item's Name: </label>
+        <input type="text"></input>
+        <hr>
+        <h5><span>Category:  </span><a>{{item.category.category_name}}</a></h5>
+        <textarea type='text' style="width:900px"></textarea>
+        <h6>Item added by: <span>{{item.user.username}}</span></h6>
+        <hr>
+            <button href="/" role='button' class="btn btn-secondary btn-submit">  Submit</button>
+        </form>
+        </div>              
+</div>
+
+{% include "./extended/footer.html" %}

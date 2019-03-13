@@ -1,0 +1,16 @@
+{% include "./extended/header.html" %}
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <h1>{{item.item_name}}</h1>
+        <hr>
+        <h5><span>Category:  </span><a href= {{url_for('render_category_page', category_id = category.id)}}>{{item.category.category_name}}</a></h5>
+        <p>{{item.item_description}}</p>
+        <h6>Item added by: <span>{{item.user.username}}</span></h6>
+        <hr>
+            <a href="/" role='button' class="btn btn-secondary btn-warning">  Edit</a>
+            <a href="/" role="button" class="btn btn-secondary btn-danger">  Delete</a>
+    </div>              
+</div>
+
+{% include "./extended/footer.html" %}

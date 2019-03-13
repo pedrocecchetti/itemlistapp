@@ -1,0 +1,35 @@
+<script>
+      function onSignIn(googleUser ){
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log(googleUser.getAuthResponse())
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/teste');
+        xhr.setRequestHeader('Content-Type',  "application/json;charset=UTF-8");
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send(JSON.stringify({"id_token":id_token}));
+        $('#signout').css('display','block')
+      }
+
+      function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
+    </script>
+        <script>
+            gapi.load('auth2', function() {
+              auth2 = gapi.auth2.init({
+                client_id: '950296359546-tr6a0qci8smluvackvmj51bruuu73qos.apps.googleusercontent.com',
+                // Scopes to request in addition to 'profile' and 'email'
+                //scope: 'additional_scope'
+              });
+            });
+          </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

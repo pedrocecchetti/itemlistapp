@@ -1,0 +1,29 @@
+{% include "./extended/header.html" %}
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <div>
+        <h3>Items List:</h3>
+            <nav class="nav flex-column">
+                {% for item in items: %}
+                <li>
+                    <a href="{{ url_for('render_item_page', category_id = item.category_id, item_id = item.id) }}">{{item.item_name}}</a>
+                </li>  
+                {% endfor %}
+            </nav>
+        </div>
+        <div>
+                <h2>Category List:</h2>
+                    <nav class="nav flex-column">
+                        {% for category in categorys: %}
+                        <li>
+                            <a href="{{ url_for('render_category_page', category_id = category.id) }}">{{category.category_name}}</a>
+                        </li>  
+                        {% endfor %}
+                    </nav>
+                </div>
+                
+    </div>              
+</div>
+
+{% include "./extended/footer.html" %}

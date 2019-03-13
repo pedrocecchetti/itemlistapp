@@ -28,7 +28,7 @@ class Item(Base):
     user = relationship('User')
 
 
-engine = create_engine('sqlite:///item_category_app.db')
+engine = create_engine('sqlite:///item_category_app.db', connect_args={'check_same_thread': False})
  
 
 Base.metadata.create_all(engine)

@@ -1,4 +1,4 @@
-from models import Base, User, Category, Item
+from models import Base, User, Category, Item, engine
 from flask import Flask, jsonify, request, url_for, abort, g, render_template
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -18,10 +18,6 @@ import requests
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
-auth = HTTPBasicAuth()
-
-
-engine = create_engine('sqlite:///item_category_app.db')
 
 Base.metadata.bind = engine
 Session = sessionmaker(bind=engine)

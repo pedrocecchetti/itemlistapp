@@ -14,9 +14,17 @@ In order to run this app you're gonna have to have in your machine:
 - Python 
 - Flask
 - SqlAlchemy
+- Sqlite
 
--(and some libs related to the auth step)
+- (and some libs related to the auth step)
 
 After you have installed all the requirements, you should be able to run the app. 
 
-1. The first step is to create your data Structure with models
+1. The first step is to create your DataBase.
+``` python models.py```
+
+2. Populate the DB:
+```python populatedb.py```
+
+3. Then run the app:
+``` python views.py```

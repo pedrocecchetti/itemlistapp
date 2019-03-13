@@ -89,6 +89,13 @@ def render_item_page(category_id,item_id):
 
     return render_template('item_page.html', category = category, item= item)
 
+@app.route('/category/<int:category_id>/item/new')
+def render_add_new_item_page(category_id):
+    session = Session()
+    category = session.query(Category).filter_by(id = category_id).first()
+
+    return render_template('add_new_item.html')
+
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit')
 def edit_item(item_id, category_id):
     session = Session()

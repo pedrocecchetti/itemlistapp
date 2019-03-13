@@ -95,6 +95,12 @@ def edit_item(item_id, category_id):
     item = session.query(Item).filter_by(id = item_id).one()
     return render_template('edit_item.html', item = item)
 
+@app.route('/category/<int:category_id>/item/<int:item_id>/delete')
+def delete_item(item_id, category_id):
+    session = Session()
+    item = session.query(Item).filter_by(id = item_id).one()
+    return render_template('delete_item.html', item = item)
+
 
 if __name__ == '__main__':
     app.debug = True

@@ -28,20 +28,6 @@ CLIENT_ID = json.loads(
     open('client_secret.json', 'r').read())['web']['client_id']
 
 
-
-@auth.verify_password
-def verify_password(username_or_token, password):
-    #Try to see if it's a token first
-    user_id = User.verify_auth_token(username_or_token)
-    if user_id:
-        user = session.query(User).filter_by(id = user_id).one()
-    else:
-        user = session.query(User).filter_by(username = username_or_token).first()
-        if not user or not user.verify_password(password):
-            return False
-    g.user = user
-    return True
-
 @app.route('/login')
 def start():
     return render_template('clientOAuth.html')
@@ -54,8 +40,6 @@ def render_landing_page():
     # a sidebar menu to navigate through the categories
     # First we need to store 5 first items
     five_random_item = []
-    five_random_category = []
-    
     # for i in range(1,6):
     #     item_list.append(session.query(Item).filter_by(id = i).first())
     item_list = session.query(Item).all()
@@ -71,21 +55,17 @@ def render_category_page(category_id):
     category = session.query(Category).filter_by(id = category_id).first()
     items = session.query(Item).filter_by(category_id = category_id).all()
     first_items = items[0:5]
-    print(first_items)
-
     return render_template('category_page.html', category = category, items = first_items)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>')
 def render_item_page(category_id,item_id):
     category = session.query(Category).filter_by(id = category_id).first()
     item = session.query(Item).filter_by(id = item_id).one()
-
     return render_template('item_page.html', category = category, item= item)
 
 @app.route('/category/<int:category_id>/item/new')
 def render_add_new_item_page(category_id):
     category = session.query(Category).filter_by(id = category_id).first()
-
     return render_template('add_new_item_page.html', category = category)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit')

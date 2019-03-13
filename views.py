@@ -18,11 +18,10 @@ import requests
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
-
 Base.metadata.bind = engine
 Session = sessionmaker(bind=engine)
-
 app = Flask(__name__)
+session = Session()
 
 
 CLIENT_ID = json.loads(
@@ -48,7 +47,7 @@ def start():
     return render_template('clientOAuth.html')
 
 
-### All routes related to read
+
 @app.route('/')
 def render_landing_page():
     # When you get to this route, it shows the index page with some items and 
@@ -56,7 +55,7 @@ def render_landing_page():
     # First we need to store 5 first items
     five_random_item = []
     five_random_category = []
-    session = Session()
+    
     # for i in range(1,6):
     #     item_list.append(session.query(Item).filter_by(id = i).first())
     item_list = session.query(Item).all()
@@ -69,7 +68,6 @@ def render_landing_page():
 
 @app.route('/category/<int:category_id>')
 def render_category_page(category_id):
-    session = Session()
     category = session.query(Category).filter_by(id = category_id).first()
     items = session.query(Item).filter_by(category_id = category_id).all()
     first_items = items[0:5]
@@ -79,7 +77,6 @@ def render_category_page(category_id):
 
 @app.route('/category/<int:category_id>/item/<int:item_id>')
 def render_item_page(category_id,item_id):
-    session = Session()
     category = session.query(Category).filter_by(id = category_id).first()
     item = session.query(Item).filter_by(id = item_id).one()
 
@@ -87,20 +84,17 @@ def render_item_page(category_id,item_id):
 
 @app.route('/category/<int:category_id>/item/new')
 def render_add_new_item_page(category_id):
-    session = Session()
     category = session.query(Category).filter_by(id = category_id).first()
 
     return render_template('add_new_item_page.html', category = category)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit')
 def edit_item(item_id, category_id):
-    session = Session()
     item = session.query(Item).filter_by(id = item_id).one()
     return render_template('edit_item.html', item = item)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete')
 def delete_item(item_id, category_id):
-    session = Session()
     item = session.query(Item).filter_by(id = item_id).one()
     return render_template('delete_item.html', item = item)
 

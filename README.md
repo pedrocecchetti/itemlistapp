@@ -16,6 +16,8 @@ In order to run this app you're gonna have to have in your machine:
 - SqlAlchemy
 - Sqlite
 
+Also in order to have the Google Auth working on this app You will have to create a file inside the folder of the project called: client_secret.json with th infos with google apis codes. 
+
 - (and some libs related to the auth step)
 
 After you have installed all the requirements, you should be able to run the app. 

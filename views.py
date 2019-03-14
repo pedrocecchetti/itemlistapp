@@ -1,5 +1,5 @@
 from models import Base, User, Category, Item, engine
-from flask import Flask, jsonify, request, url_for, abort, g, render_template, flash, redirect,g
+from flask import Flask, jsonify, request, url_for, abort, g, render_template, flash, redirect, g
 from flask import session as login_session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -109,9 +109,9 @@ def logout():
     global log
     log = False
 
-    return redirect(url_for('render_item_page',category_id=2,item_id=5), code = 305)
+    return redirect('/',code=302)    
 
 if __name__ == '__main__':
     app.debug = True
-    #app.config['SECRET_KEY'] = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    # app.config['SECRET_KEY'] = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     app.run(host='0.0.0.0', port=5000)

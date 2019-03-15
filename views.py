@@ -23,13 +23,12 @@ CLIENT_ID = json.loads(
 
 @app.route('/googleauth', methods = ['POST'])
 def start():    
-
-    # session_login['username'] = request.args[]
+    # Get the content on the POST request
     response = request.get_json()
     username = response['username']
     image_url = response['image_url']
     id_token = response['id_token']
-    # Validating Token
+    # Token Validation
     auth_response = requests.get('https://oauth2.googleapis.com/tokeninfo?id_token={}'.format(id_token))
     if auth_response.status_code == 200:
         #If response is 200 Create the session
@@ -46,7 +45,7 @@ def start():
             session.commit()
             print("Successfully Logged In!")
         else:
-            # If the user is not in DB create a user
+            # If the user is not in DB create a new user
             new_user = User(username = username, google_sub = google_sub, id_token = id_token,image_url = image_url)
             session.add(new_user)
             session.commit()
@@ -101,18 +100,29 @@ def render_item_page(category_id,item_id):
     item = session.query(Item).filter_by(id = item_id).one()
     return render_template('item_page.html', category = category, item= item, log = log)
 
-@app.route('/category/<int:category_id>/item/new')
+@app.route('/category/<int:category_id>/item/new', methods=['GET','POST'])
 def render_add_new_item_page(category_id):
-    log = ''
-    # Conditional for Login/Logout buttons
-    if 'username' not in login_session:
-        flash("You're Not Logged in, please Log in!")
-        return redirect(url_for('render_landing_page'), code=302)
-    else: 
-        log = True
-
     category = session.query(Category).filter_by(id = category_id).first()
-    return render_template('add_new_item_page.html', category = category, log = log)
+    
+    if request.method == 'POST':
+        user = session.query(User).filter_by(google_sub = login_session['google_sub']).first()
+        user_id = user.id
+        new_item = Item(item_name = request.form['item_name'], 
+                        item_description=request.form['item_name'], 
+                        category_id=category_id, user_id = user_id)
+        session.add(new_item)
+        session.commit()
+        print('Item added!')
+    else:
+        log = ''
+        # Conditional for Login/Logout buttons
+        if 'username' not in login_session:
+            flash("You're Not Logged in, please Log in!")
+            return redirect(url_for('render_landing_page'), code=302)
+        else: 
+            log = True
+        
+        return render_template('add_new_item_page.html', category = category, log = log)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit', methods=['GET','POST'])
 def edit_item(item_id, category_id):
@@ -132,10 +142,7 @@ def edit_item(item_id, category_id):
     else:
         log = True
         return render_template('edit_item.html', item = item, log = log)
-
-        
-
-    
+ 
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete')
 def delete_item(item_id, category_id):
@@ -148,6 +155,7 @@ def logout():
     login_session.pop('username', None)
     login_session.pop('image_url',None)
     login_session.pop('id_token', None)
+    print(login_session)
     return redirect('/',code=302)    
 
 

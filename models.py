@@ -10,6 +10,8 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     username = Column(String, index=True)
+    id_token = Column(String)
+    image_url = Column(String)
     google_sub = Column(String, nullable = False)
 
 class Category(Base):

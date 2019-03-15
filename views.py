@@ -31,11 +31,14 @@ def start():
     # Token Validation
     auth_response = requests.get('https://oauth2.googleapis.com/tokeninfo?id_token={}'.format(id_token))
     if auth_response.status_code == 200:
-        #If response is 200 Create the session
+        #If response is 200 
+        # import google sub from response
         google_sub = json.loads(auth_response.text)['sub']
+        # Create the session
         login_session['username'] = username
         login_session['image_url'] = image_url
         login_session['id_token'] = id_token
+        login_session['google_sub'] = google_sub
         #Pull user from DB
         user = session.query(User).filter_by(google_sub = google_sub).first()
         #if user in DB just log and update id_token
@@ -61,17 +64,15 @@ def start():
 def render_landing_page():
     # When you get to this route, it shows the index page with some items and 
     # a sidebar menu to navigate through the categories
-    # Storing 5 first items
+    # Storing 5 random items
     five_random_item = []
-    log = ''
-    # for i in range(1,6):
-    #     item_list.append(session.query(Item).filter_by(id = i).first())
     item_list = session.query(Item).all()
     item_size =  len(item_list)
     category_list = session.query(Category).all()
     for i in range(0,6):
         five_random_item.append(item_list[random.randint(0,item_size-1)])
     # Conditional for Login/Logout buttons
+    log = ''
     if 'username' in login_session:
         log = True
 
@@ -86,8 +87,7 @@ def render_category_page(category_id):
 
     category = session.query(Category).filter_by(id = category_id).first()
     items = session.query(Item).filter_by(category_id = category_id).all()
-    first_items = items[0:5]
-    return render_template('category_page.html', category = category, items = first_items, log = log)
+    return render_template('category_page.html', category = category, items = items, log = log)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>')
 def render_item_page(category_id,item_id):
@@ -113,6 +113,8 @@ def render_add_new_item_page(category_id):
         session.add(new_item)
         session.commit()
         print('Item added!')
+        flash('Item Added!')
+        return redirect(url_for('render_landing_page'), code=302)
     else:
         log = ''
         # Conditional for Login/Logout buttons
@@ -121,20 +123,20 @@ def render_add_new_item_page(category_id):
             return redirect(url_for('render_landing_page'), code=302)
         else: 
             log = True
-        
+
         return render_template('add_new_item_page.html', category = category, log = log)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit', methods=['GET','POST'])
 def edit_item(item_id, category_id):
-    item = session.query(Item).filter_by(id = item_id).one()
-    item_user = item.user
+    item = session.query(Item).filter_by(id = item_id).first()
+    item_user_sub = item.user.google_sub
     log = ''
     # Conditional for Login/Logout buttons
     if 'username' not in login_session:
         flash("You're Not Logged in, please Log in!")
         return redirect(url_for('render_landing_page'), code=302)
     # Conditional for Item Ownership
-    elif login_session != item_user:
+    elif login_session['google_sub'] != item_user_sub:
         flash('You cannot edit this item, because you are not owner!')
         log = False
         return redirect(url_for('render_landing_page'), code=302)
@@ -143,6 +145,7 @@ def edit_item(item_id, category_id):
         log = True
         return render_template('edit_item.html', item = item, log = log)
  
+
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete')
 def delete_item(item_id, category_id):

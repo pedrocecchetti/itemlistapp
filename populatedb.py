@@ -52,7 +52,7 @@ session.add(category_6)
 session.commit()
 
 # Adding the first User
-user_1 = User(username = 'Admin', google_sub='1')
+user_1 = User(username = 'Admin', google_sub='1',)
 session.add(user_1)
 session.commit()
 

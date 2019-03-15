@@ -10,14 +10,6 @@ import random
 from flask_httpauth import HTTPBasicAuth
 from flask import json
 
-#NEW IMPORTS
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
-import httplib2
-from flask import make_response
-import requests
-from google.oauth2 import id_token
-
 Base.metadata.bind = engine
 Session = sessionmaker(bind=engine)
 app = Flask(__name__)

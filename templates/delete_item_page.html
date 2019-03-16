@@ -1,0 +1,15 @@
+{% include "./extended/header.html" %}
+<br>
+<div class="container">
+    <div class="jumbotron">
+        <form action="" method="POST">
+        <h4>Do you want to delete: {{item.item_name}}</h4>
+        <h5><span>Category:  </span><a>{{item.category.category_name}}</a></h5>
+        <h6>Item added by: <span>{{item.user.username}}</span></h6>
+        <hr>
+            <button href="/" role='button' class="btn btn-secondary btn-submit">Submit</button>
+        </form>
+        </div>              
+</div>
+
+{% include "./extended/footer.html" %}

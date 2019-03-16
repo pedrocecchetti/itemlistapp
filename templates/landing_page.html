@@ -7,7 +7,7 @@
             <nav class="nav flex-column">
                 {% for item in items: %}
                 <li>
-                    <a href="{{ url_for('render_item_page', category_id = item.category_id, item_id = item.id) }}">{{item.item_name}}</a>
+                    <a href="{{ url_for('render_item_page', category_id = item.category_id, item_id = item.id) }}">{{item.item_name}}</a><span style="color:darkgrey; font-style: italic">({{item.category.category_name}})</span>
                 </li>  
                 {% endfor %}
             </nav>

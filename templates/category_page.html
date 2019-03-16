@@ -8,7 +8,9 @@
                     <li>
                         <a href= {{ url_for('render_item_page', category_id = item.category_id, item_id = item.id) }}>{{item.item_name}}</a>
                     </li>
-                    {% endfor %}  
+                    {% endfor %}
+                    <hr>
+                    <a href={{ url_for('render_add_new_item_page', category_id=category.id)}} class="btn btn-success">Add New Item</a>
                 </nav>
         </div>              
 </div>

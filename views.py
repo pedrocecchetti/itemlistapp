@@ -85,6 +85,7 @@ def render_category_page(category_id):
     if 'username' in login_session:
         log = True
 
+    # Pull Category and Items from DB
     category = session.query(Category).filter_by(id = category_id).first()
     items = session.query(Item).filter_by(category_id = category_id).all()
     return render_template('category_page.html', category = category, items = items, log = log)
@@ -96,17 +97,22 @@ def render_item_page(category_id,item_id):
     if 'username' in login_session:
         log = True
 
+    # Pull Category and Item from DB
     category = session.query(Category).filter_by(id = category_id).first()
     item = session.query(Item).filter_by(id = item_id).one()
     return render_template('item_page.html', category = category, item= item, log = log)
 
 @app.route('/category/<int:category_id>/item/new', methods=['GET','POST'])
 def render_add_new_item_page(category_id):
+    # Pull the Category from DB to use as an object
     category = session.query(Category).filter_by(id = category_id).first()
     
+    # Route for the POST methos
     if request.method == 'POST':
+        # Pull User from DB and store google_sub
         user = session.query(User).filter_by(google_sub = login_session['google_sub']).first()
         user_id = user.id
+        # Create new item
         new_item = Item(item_name = request.form['item_name'], 
                         item_description=request.form['item_name'], 
                         category_id=category_id, user_id = user_id)
@@ -114,8 +120,9 @@ def render_add_new_item_page(category_id):
         session.commit()
         print('Item added!')
         flash('Item Added!')
-        return redirect(url_for('render_landing_page'), code=302)
+        return redirect(url_for('render_category_page',category_id = category.id), code=302)
     else:
+    # For GET route
         log = ''
         # Conditional for Login/Logout buttons
         if 'username' not in login_session:
@@ -129,23 +136,29 @@ def render_add_new_item_page(category_id):
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit', methods=['GET','POST'])
 def edit_item(item_id, category_id):
     item = session.query(Item).filter_by(id = item_id).first()
-    item_user_sub = item.user.google_sub
-    log = ''
-    # Conditional for Login/Logout buttons
-    if 'username' not in login_session:
-        flash("You're Not Logged in, please Log in!")
-        return redirect(url_for('render_landing_page'), code=302)
-    # Conditional for Item Ownership
-    elif login_session['google_sub'] != item_user_sub:
-        flash('You cannot edit this item, because you are not owner!')
-        log = False
-        return redirect(url_for('render_landing_page'), code=302)
-    # If User passes everything then Render Edit Template
+    if request.method == 'POST':
+        item.item_name = request.form['item_name']
+        item.item_description = request.form['item_description']
+        session.add(item)
+        session.commit()
+        flash('Item successfully edited!')
+        return redirect(url_for('render_category_page',category_id=item.category_id))
     else:
-        log = True
-        return render_template('edit_item.html', item = item, log = log)
- 
-
+        item_user_sub = item.user.google_sub
+        log = ''
+        # Conditional for Login/Logout buttons
+        if 'username' not in login_session:
+            flash("You're Not Logged in, please Log in!")
+            return redirect(url_for('render_landing_page'), code=302)
+        # Conditional for Item Ownership
+        elif login_session['google_sub'] != item_user_sub:
+            flash('You cannot edit this item, because you are not owner!')
+            log = False
+            return redirect(url_for('render_landing_page'), code=302)
+        # If User passes everything then Render Edit Template
+        else:
+            log = True
+            return render_template('edit_item.html', item = item, log = log)
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete')
 def delete_item(item_id, category_id):

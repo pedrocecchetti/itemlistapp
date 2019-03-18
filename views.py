@@ -32,7 +32,8 @@ def start():
     id_token = response['id_token']
     # Token Validation
     auth_response = requests.get(
-                    '''https://oauth2.googleapis.com/tokeninfo?id_token={}'''.format(id_token))
+                    'https://oauth2.googleapis.com/tokeninfo?'
+                    'id_token={}'.format(id_token))
 
     if auth_response.status_code == 200:
         # If response is 200

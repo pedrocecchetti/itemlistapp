@@ -32,8 +32,7 @@ def start():
     id_token = response['id_token']
     # Token Validation
     auth_response = requests.get(
-                    '''https://oauth2.googleapis.com/tokeninfo?
-                    id_token={}'''.format(id_token))
+                    '''https://oauth2.googleapis.com/tokeninfo?id_token={}'''.format(id_token))
 
     if auth_response.status_code == 200:
         # If response is 200
@@ -183,13 +182,15 @@ def edit_item(item_id, category_id):
             return render_template('edit_item.html', item=item, log=log)
 
 
-@app.route('/category/<int:category_id>/item/<int:item_id>/delete')
+@app.route('/category/<int:category_id>/item/<int:item_id>/delete', methods=['GET','POST'])
 def delete_item(item_id, category_id):
     item = session.query(Item).filter_by(id=item_id).first()
     item_user_sub = item.user.google_sub
     if request.method == 'POST':
         session.delete(item)
         session.commit()
+        flash("Item Deleted Successfully")
+        return redirect(url_for('render_category_page', category_id=item.category_id))
     else:
         # Conditional for Login/Logout buttons
         if 'username' not in login_session:
@@ -207,10 +208,7 @@ def delete_item(item_id, category_id):
         # If User passes everything then Render Edit Template
         else:
             log = True
-            return render_template('edit_item.html', item=item, log=log)
-        log = ''
-        item = session.query(Item).filter_by(id=item_id).one()
-        return render_template('delete_item_page.html', item=item, log=log)
+            return render_template('delete_item_page.html', item=item, log=log)
 
 
 @app.route('/logout', methods=['POST'])

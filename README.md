@@ -22,7 +22,7 @@ Also in order to have the Google Auth working on this app You will have to creat
 
 After you have installed all the requirements, you should be able to run the app. 
 
-#HOW TO RUN YOUR APP
+## HOW TO RUN YOUR APP
 
 1. The first step is to create your DataBase.
 ``` python models.py```

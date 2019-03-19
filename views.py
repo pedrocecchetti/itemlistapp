@@ -224,8 +224,12 @@ def logout():
 @app.route('/allitems/JSON')
 def get_json_items():
     items = session.query(Item).all()
-    print(dict(items[0]))   
+    length = len(items)
+    items_deserialized = []
+    for i in range(0,length):
+        items_deserialized.append(item_schema.dump(items[i]).data)
 
+    return jsonify(items_deserialized)
 
 
 if __name__ == '__main__':

@@ -1,14 +1,14 @@
 from sqlalchemy import Column, Integer, String, create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
-from passlib.apps import custom_app_context as pwd_context
+from marshmallow_sqlalchemy import ModelSchema
 
 Base = declarative_base()
-
 
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
+
     username = Column(String, index=True)
     id_token = Column(String)
     image_url = Column(String)
@@ -32,8 +32,27 @@ class Item(Base):
     user = relationship('User')
 
 
+class UserSchema(ModelSchema):
+    class Meta:
+        model = User
+
+
+class CategorySchema(ModelSchema):
+    class Meta:
+        model = Category
+
+
+class ItemSchema(ModelSchema):
+    class Meta:
+        model = Item
+
+
+item_schema = ItemSchema()
+category_schema =CategorySchema()
+user_schema = UserSchema()
+
+
 engine = create_engine('sqlite:///item_category_app.db',
                        connect_args={'check_same_thread': False})
 
 Base.metadata.create_all(engine)
-

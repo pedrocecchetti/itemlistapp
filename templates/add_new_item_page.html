@@ -5,10 +5,10 @@
         <form method="POST">
         <h4>Fill the fields to create new item for category: {{category.category_name}}</h4>
         <label for="">Item's Name: </label>
-        <input type="text" name='item_name'></input>
+        <input type="text" name='item_name' required></input>
         <hr>
         <label > Description: </label>
-        <input type='textarea' name="item_description" style="width:900px; height:100px;"></input>
+        <input type='textarea' name="item_description" style="width:900px; height:100px;" required minlength="30"></input>
         <hr>
             <button href="/" role='button' class="btn btn-secondary btn-success">Submit</button>
         </form>

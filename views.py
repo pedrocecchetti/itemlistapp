@@ -233,6 +233,22 @@ def get_json_items():
     return jsonify(items_deserialized)
 
 
+@app.route('/category/<int:category_id>/JSON')
+def get_json_category(category_id):
+    items = session.query(Category).filter_by(id=category_id).first()    
+    items_deserialized = []
+    items_deserialized.append(category_schema.dump(items).data)
+
+    return jsonify(items_deserialized)
+
+@app.route('/item/<int:item_id>/JSON')
+def get_json_item(item_id):
+    item = session.query(Item).filter_by(id=item_id).first()
+    item_deserialized = item_schema.dump(item).data
+
+    return jsonify(item_deserialized)
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)

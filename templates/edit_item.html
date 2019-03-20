@@ -5,10 +5,10 @@
         <form action="" method="POST">
         <h4>Change the input fields to edit the Item:</h4>
         <label for="">Item's Name: </label>
-        <input name=item_name placeholder={{item.item_name}}></input>
+        <input name=item_name placeholder={{item.item_name}} required minlength="5"></input>
         <hr>
         <h5><span>Category:  </span><a>{{item.category.category_name}}</a></h5>
-        <input type='text' name='item_description' style="width:900px; height:100px">{{item.item_description}}</input>
+        <input type='text' name='item_description' style="width:900px; height:100px" required minlength="30">{{item.item_description}}</input>
         <h6>Item added by: <span>{{item.user.username}}</span></h6>
         <hr>
             <button href="/" role='button' class="btn btn-secondary btn-submit">  Submit</button>

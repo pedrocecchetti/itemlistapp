@@ -5,6 +5,7 @@ from marshmallow_sqlalchemy import ModelSchema
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -48,7 +49,7 @@ class ItemSchema(ModelSchema):
 
 
 item_schema = ItemSchema()
-category_schema =CategorySchema()
+category_schema = CategorySchema()
 user_schema = UserSchema()
 
 

@@ -52,7 +52,7 @@ def start():
             user.id_token = id_token
             session.add(user)
             session.commit()
-            print("Successfully Logged In!")
+            logger("Successfully Logged In!")
         else:
             # If the user is not in DB create a new user
             new_user = User(username=username, google_sub=google_sub,
@@ -127,7 +127,7 @@ def render_add_new_item_page(category_id):
         user_id = user.id
         # Create new item
         new_item = Item(item_name=request.form['item_name'],
-                        item_description=request.form['item_name'],
+                        item_description=request.form['item_description'],
                         category_id=category_id, user_id=user_id)
         session.add(new_item)
         session.commit()
@@ -184,7 +184,8 @@ def edit_item(item_id, category_id):
             return render_template('edit_item.html', item=item, log=log)
 
 
-@app.route('/category/<int:category_id>/item/<int:item_id>/delete', methods=['GET','POST'])
+@app.route('/category/<int:category_id>/item/<int:item_id>/delete',
+           methods=['GET', 'POST'])
 def delete_item(item_id, category_id):
     item = session.query(Item).filter_by(id=item_id).first()
     item_user_sub = item.user.google_sub
@@ -192,7 +193,8 @@ def delete_item(item_id, category_id):
         session.delete(item)
         session.commit()
         flash("Item Deleted Successfully")
-        return redirect(url_for('render_category_page', category_id=item.category_id))
+        return redirect(url_for('render_category_page',
+                        category_id=item.category_id))
     else:
         # Conditional for Login/Logout buttons
         if 'username' not in login_session:
@@ -227,7 +229,7 @@ def get_json_items():
     items = session.query(Item).all()
     length = len(items)
     items_deserialized = []
-    for i in range(0,length):
+    for i in range(0, length):
         items_deserialized.append(item_schema.dump(items[i]).data)
 
     return jsonify(items_deserialized)
@@ -235,11 +237,12 @@ def get_json_items():
 
 @app.route('/category/<int:category_id>/JSON')
 def get_json_category(category_id):
-    items = session.query(Category).filter_by(id=category_id).first()    
+    items = session.query(Category).filter_by(id=category_id).first()
     items_deserialized = []
     items_deserialized.append(category_schema.dump(items).data)
 
     return jsonify(items_deserialized)
+
 
 @app.route('/item/<int:item_id>/JSON')
 def get_json_item(item_id):
